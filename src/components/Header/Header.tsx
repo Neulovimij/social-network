@@ -7,13 +7,10 @@ export type HeaderPropsType = {
     isAuth: boolean
     login: string | null
 }
-
-
 const Header = (props: HeaderPropsType) => {
     return (
         <header className={s.header}>
-            <img src="https://www.logodesign.net/images/nature-logo.png"/>
-
+            <img src="https://www.logodesign.net/images/nature-logo.png" alt="picture"/>
             <div className={s.loginBlock}>
                 {props.isAuth ? props.login
                     : <NavLink to={"/login"}>Login</NavLink>}
