@@ -2,6 +2,9 @@ import {
     ActionsType, SetUserDataActionType,
 
 } from "./store";
+import {Dispatch} from "redux";
+import {headerAuthMeAPI} from "../api/api";
+import {setUserProfile} from "./profile-reducer";
 
 const SET_USER_DATA = "SET-USER-DATA";
 /*const UNFOLLOW = "UNFOLLOW";*/
@@ -55,6 +58,17 @@ const authReduser = (state: InitialStateType = initialState, action: ActionsType
 
 export const setAuthUserData = (userId: string, email: string, login: string): SetUserDataActionType =>
     ({type: SET_USER_DATA, data: {userId, email, login}})
+
+export const getAuthUserData = () => (dispatch: Dispatch) => {
+    headerAuthMeAPI.singIn()
+        .then(data => {
+            if (data.resultCode === 0) {
+                let {id, email, login} = data.data;
+                dispatch(setAuthUserData(id, email, login));
+            }
+        });
+}
+
 
 
 export default authReduser;

@@ -2,8 +2,6 @@ import React from "react";
 import {connect} from "react-redux";
 import {
     follow, getUsers,
-    setCurrentPage,
-    toggleFollowingProgress,
     unfollow,
     UserType
 } from "../../redux/users-reducer";
@@ -24,35 +22,7 @@ type MapDispatchPropsType = {
     follow: (userId: number) => void
     unfollow: (userId: number) => void
     getUsers: (currentPage: number, pageSize: number) => void
-    // setUsers: (users: Array<UserType>) => void
-    // setCurrentPage: (pageNumber: number) => void
-    // setTotalUsersCount: (totalCount: number) => void
-    // toggleIsFetching: (isFetching: boolean, id: number) => void
 }
-
-
-// follow,
-//     unfollow,
-//     setCurrentPage,
-//     toggleFollowingProgress,
-//     getUsers,
-
-// interface IUsersProps {
-//     users: Array<UserType>
-//     pageSize: number
-//     totalUsersCount: number
-//     currentPage: number
-//     follow: (userId: number) => void
-//     unfollow: (userId: number) => void
-//     setUsers: (users: Array<UserType>) => void
-//     setCurrentPage: (pageNumber: number) => void
-//     setTotalUsersCount: (totalCount: number) => void
-//     isFetching: boolean
-//     toggleIsFetching: (isFetching: boolean) => void
-//     toggleFollowingProgress: (isFetching: boolean, id: number) => void
-//     followingInProgress: []
-//     getUsers: (currentPage: number, pageSize: number) => void
-// }
 
 type UsersContainerPropsType = MapStatePropsType & MapDispatchPropsType
 
