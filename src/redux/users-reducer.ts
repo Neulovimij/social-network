@@ -7,6 +7,8 @@ import {
     ToggleIsFetchingActionType,
     UnFollowActionType,
 } from "./store";
+import {usersAPI} from "../api/api";
+import {Dispatch} from "redux";
 
 const FOLLOW = "FOLLOW";
 const UNFOLLOW = "UNFOLLOW";
@@ -15,7 +17,6 @@ const SET_CURRENT_PAGE = "SET-CURRENT-PAGE"
 const SET_TOTAL_USERS_COUNT = "SET-TOTAL-USERS-COUNT"
 const TOGGLE_IS_FETCHING = "TOGGLE-IS-FETCHING"
 const TOGGLE_IS_FOLLOWING_PROGRESS = "TOGGLE-IS-FOLLOWING-PROGRESS"
-
 
 
 export type UserType = {
@@ -30,7 +31,7 @@ export type UserType = {
 export type PhotoType = {
     small: string
 }
-export type UsersLocationType ={
+export type UsersLocationType = {
     city: string
     country: string
 }
@@ -47,14 +48,14 @@ type InitialStateType = {
 let initialState: InitialStateType = {
     users: [],
     pageSize: 5,
-    totalUsersCount:0,
+    totalUsersCount: 0,
     currentPage: 1,
     isFetching: true,
     followingInProgress: [],
 
 };
 
-const usersReduser = (state: InitialStateType = initialState, action: ActionsType):InitialStateType => {
+const usersReduser = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
     switch (action.type) {
         case FOLLOW:
             return {
@@ -82,9 +83,9 @@ const usersReduser = (state: InitialStateType = initialState, action: ActionsTyp
             }
         }
         case SET_CURRENT_PAGE: {
-                return {
-                    ...state, currentPage: action.currentPage
-                }
+            return {
+                ...state, currentPage: action.currentPage
+            }
         }
         case SET_TOTAL_USERS_COUNT: {
             return {
@@ -110,10 +111,10 @@ const usersReduser = (state: InitialStateType = initialState, action: ActionsTyp
     }
 }
 
-export const follow = (userId: number): FollowActionType =>
+export const followSuccess = (userId: number): FollowActionType =>
     ({type: FOLLOW, userId})
 
-export const unfollow = (userId: number): UnFollowActionType =>
+export const unfollowSuccess = (userId: number): UnFollowActionType =>
     ({type: UNFOLLOW, userId})
 
 export const setUsers = (users: Array<UserType>): SetUsersActionType =>
@@ -123,12 +124,49 @@ export const setCurrentPage = (currentPage: number): SetCurrentPageActionType =>
     ({type: SET_CURRENT_PAGE, currentPage})
 
 export const setTotalUsersCount = (totalUsersCount: number): SetTotalUsersCountActionType =>
-    ({type: SET_TOTAL_USERS_COUNT, count:totalUsersCount})
+    ({type: SET_TOTAL_USERS_COUNT, count: totalUsersCount})
 
 export const toggleIsFetching = (isFetching: boolean): ToggleIsFetchingActionType =>
     ({type: TOGGLE_IS_FETCHING, isFetching})
 
 export const toggleFollowingProgress = (isFetching: boolean, userId: number): ToggleFollowingProgressActionType =>
     ({type: TOGGLE_IS_FOLLOWING_PROGRESS, isFetching, userId})
+
+export const getUsers = (currentPage: number, pageSize: number) => {
+    return (dispatch: Dispatch) => {
+        dispatch(toggleIsFetching(true));
+        usersAPI.getUsers(currentPage, pageSize).then(data => {
+            dispatch(toggleIsFetching(false));
+            dispatch(setUsers(data.items));
+            dispatch(setTotalUsersCount(data.totalCount));
+        });
+    }
+}
+
+export const follow = (id: number) => {
+    return (dispatch: Dispatch) => {
+        dispatch(toggleFollowingProgress(true, id));
+        usersAPI.postFollowing(id)
+            .then(data => {
+                if (data.resultCode === 0) {
+                    dispatch(followSuccess(id));
+                }
+                dispatch(toggleFollowingProgress(false, id));
+            });
+    }
+}
+
+export const unfollow = (id: number) => {
+    return (dispatch: Dispatch) => {
+        dispatch(toggleFollowingProgress(true, id));
+        usersAPI.deleteFollowing(id)
+            .then(data => {
+                if (data.resultCode === 0) {
+                    dispatch(unfollowSuccess(id));
+                }
+                dispatch(toggleFollowingProgress(false, id));
+            });
+    }
+}
 
 export default usersReduser;
