@@ -5,10 +5,6 @@ import {connect} from "react-redux";
 import {AppStateType} from "../../redux/redux-store";
 import {getAuthUserData} from "../../redux/auth-reducer";
 
-
-
-
-
 type MapStatePropsType = {
     isAuth: boolean
     login: string | null
