@@ -1,7 +1,6 @@
 import profileReduser from "./profile-reducer";
 import dialodsReducer from "./dialogs-reducer";
 import sidebarReducer from "./sidebar-reducer";
-import any = jasmine.any;
 
 let store: StoreType = {
     _state: {
@@ -13,7 +12,8 @@ let store: StoreType = {
                 {id: 4, message: "YoYoYo", likesCount: 11},
             ],
             newPostText: "",
-            profile: null
+            profile: null,
+            status: ""
 
         },
         dialogsPage: {
@@ -79,6 +79,7 @@ export type ProfilePageType = {
     posts: Array<PostType>
     newPostText: string
     profile: ProfileType | null
+    status: string
 }
 
 export type ProfileType = {
@@ -136,6 +137,7 @@ export type ActionsType = AddPostActionType
     | SetUserProfileActionType
     | SetUserDataActionType
     | ToggleFollowingProgressActionType
+    | SetUserStatusActionType
 
 export type AddPostActionType = {
     type: 'ADD-POST'
@@ -197,6 +199,11 @@ export type ToggleFollowingProgressActionType = {
     type: 'TOGGLE-IS-FOLLOWING-PROGRESS'
     isFetching: boolean
     userId: number
+}
+
+export type SetUserStatusActionType = {
+    type: "SET-USER-STATUS"
+    status: string
 }
 
 
