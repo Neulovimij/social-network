@@ -11,7 +11,6 @@ let store: StoreType = {
                 {id: 3, message: "Blabla", likesCount: 10},
                 {id: 4, message: "YoYoYo", likesCount: 11},
             ],
-            newPostText: "",
             profile: null,
             status: ""
 
@@ -33,7 +32,6 @@ let store: StoreType = {
                 {id: 5, message: "Yo"},
                 {id: 6, message: "Yo"},
             ],
-            newMessageBody: ""
         },
         sidebar: {}
     },
@@ -77,7 +75,6 @@ export type PostType = {
 
 export type ProfilePageType = {
     posts: Array<PostType>
-    newPostText: string
     profile: ProfileType | null
     status: string
 }
@@ -107,7 +104,6 @@ export type ProfileType = {
 export type DialogsPageType = {
     dialogs: Array<DialogType>
     messages: Array<MessageType>
-    newMessageBody: string
 }
 
 export type RootStateType = {
@@ -141,6 +137,7 @@ export type ActionsType = AddPostActionType
 
 export type AddPostActionType = {
     type: 'ADD-POST'
+    newPostMessage: string
 }
 
 export type UpdateNewPostActionType = {
@@ -155,7 +152,7 @@ export type UpdateMessageActionType = {
 
 export type SendNewMessageActionType = {
     type: 'SEND-MESSAGE'
-    newMessage: string
+    newMessageBody: string
 }
 
 export type FollowActionType = {

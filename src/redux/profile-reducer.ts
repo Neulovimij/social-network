@@ -9,14 +9,12 @@ import {profileAPI} from "../api/api";
 
 
 const ADD_POST = "ADD-POST";
-const UPDATE_NEW_POST_TEXT = "UPDATE-NEW-POST-TEXT";
 const SET_USER_PROFILE = "SET-USER-PROFILE"
 const SET_USER_STATUS = "SET-USER-STATUS"
 
 
 type InitialStateType = {
     posts: Array<PostType>
-    newPostText: string
     profile: ProfileType | null
     status: string
 }
@@ -28,7 +26,6 @@ let initialState: InitialStateType = {
         {id: 3, message: "Blabla", likesCount: 10},
         {id: 4, message: "YoYoYo", likesCount: 11},
     ],
-    newPostText: "",
     profile: {
         "aboutMe": "я круто чувак 1001%",
         "contacts": {
@@ -58,19 +55,13 @@ const profileReduser = (state: InitialStateType = initialState, action: ActionsT
         case ADD_POST: {
             let newPost = {
                 id: 5,
-                message: state.newPostText,
+                message: action.newPostMessage,
                 likesCount: 0,
             };
             return {
                 ...state,
                 posts: [...state.posts, newPost],
                 newPostText: "",
-            };
-        }
-        case UPDATE_NEW_POST_TEXT: {
-            return {
-                ...state,
-                newPostText: action.newText,
             };
         }
         case SET_USER_STATUS: {
@@ -90,11 +81,8 @@ const profileReduser = (state: InitialStateType = initialState, action: ActionsT
     }
 }
 
-export const addPostActionCreator = (): AddPostActionType =>
-    ({type: ADD_POST})
-
-export const updateNewPostTextActionCreator = (text: string | undefined): UpdateNewPostActionType =>
-    ({type: UPDATE_NEW_POST_TEXT, newText: text}) as UpdateNewPostActionType
+export const addPostActionCreator = (newPostMessage: string): AddPostActionType =>
+    ({type: ADD_POST, newPostMessage})
 
 export const setUserProfile = (profile: ProfileType): SetUserProfileActionType =>
     ({type: SET_USER_PROFILE, profile})

@@ -1,16 +1,9 @@
 import React from "react";
 import s from "./MyPosts.module.css";
 import Post from "./Post/Post";
-import store, {addPostActionCreator, updateNewPostTextActionCreator} from "../../../redux/profile-reducer";
-import {PostType} from "../../../redux/store";
 import {MyPostPropsType} from "./MyPostsContainer";
+import {Field, InjectedFormProps, reduxForm} from "redux-form";
 
-/*type MyPostsType = {
-    message: string
-    posts: Array<PostType>
-    addPost:()=> void
-    onPostChange: (text:string) => void
-}*/
 
 const MyPosts = (props: MyPostPropsType) => {
 
@@ -19,16 +12,8 @@ const MyPosts = (props: MyPostPropsType) => {
     let postsElements =
         props.posts.map(p => <Post message={p.message} likesCount={p.likesCount}/>)
 
-    let newPostElement = React.createRef<HTMLTextAreaElement>();
-
-    let onAddPost = () => {
-        props.addPost()
-    }
-
-    let onPostChange = () => {
-        let text = newPostElement.current ? newPostElement.current.value: '' ;
-        props.updateNewPostText(text);
-
+    const addNewPost = (formData: MyPostFormDataType) => {
+        props.addPost(formData.newPostMessage)
     }
 
     return (
@@ -37,12 +22,7 @@ const MyPosts = (props: MyPostPropsType) => {
                 <h3>My Posts</h3>
             </div>
             <div>
-                <div>
-                    <textarea ref={newPostElement} value={props.newPostText} onChange={onPostChange}/>
-                </div>
-                <div>
-                    <button onClick={onAddPost}>Add post</button>
-                </div>
+                <AddPostReduxForm onSubmit={addNewPost} />
             </div>
 
             <div>
@@ -57,4 +37,26 @@ const MyPosts = (props: MyPostPropsType) => {
 
     );
 }
+
+type MyPostFormDataType = {
+    newPostMessage: string
+}
+
+const AddPostForm: React.FC<InjectedFormProps<MyPostFormDataType>> = (props) => {
+    return (
+        <form onSubmit={props.handleSubmit}>
+            <div>
+                <Field component={"textarea"} name={"newPostMessage"}
+                       placeholder="Enter your message"/>
+            </div>
+            <div>
+                <button>Add post</button>
+            </div>
+        </form>
+    )
+}
+
+const AddPostReduxForm = reduxForm<MyPostFormDataType>({form: "myPostAddMessageForm"})(AddPostForm)
+
+
 export default MyPosts;
