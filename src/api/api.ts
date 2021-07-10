@@ -36,7 +36,19 @@ export const headerAuthMeAPI = {
             .then(response => {
                 return response.data
             })
-    }
+    },
+    login(email:string, password:string, rememberMe:boolean = false) {
+        return istance.post(`auth/login`, {email, password, rememberMe} )
+            .then(response => {
+                return response.data
+            })
+    },
+    loginOut(email:string, password:string, rememberMe:boolean = false) {
+        return istance.post(`auth/login`, {email, password, rememberMe} )
+            .then(response => {
+                return response.data
+            })
+    },
 }
 
 export const profileAPI = {

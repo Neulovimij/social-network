@@ -16,9 +16,6 @@ const ProfileInfo = (props:ProfileInfo) => {
     }
     return (
         <div>
-            {/*<div>
-                <img src="https://i1.7fon.org/thumb/x144581.jpg"/>
-            </div>*/}
             <div className={s.discriptionBlock}>
                 <img src={props.profile.photos.large}/>
                 <ProfileStatus status = {props.status} updateUserStatus = {props.updateUserStatus} />

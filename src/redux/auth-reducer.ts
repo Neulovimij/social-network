@@ -69,6 +69,16 @@ export const getAuthUserData = () => (dispatch: Dispatch) => {
         });
 }
 
+export const login = (email, password, rememberMe) => (dispatch: Dispatch) => {
+    headerAuthMeAPI.singIn()
+        .then(data => {
+            if (data.resultCode === 0) {
+                let {id, email, login} = data.data;
+                dispatch(setAuthUserData(id, email, login));
+            }
+        });
+}
+
 
 
 export default authReduser;
