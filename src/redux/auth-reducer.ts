@@ -3,6 +3,7 @@ import {Dispatch} from "redux";
 import {headerAuthMeAPI, ResultCodesEnum} from "../api/api";
 import {ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "./redux-store";
+import {stopSubmit} from "redux-form";
 
 const SET_USER_DATA = "SET-USER-DATA";
 /*const UNFOLLOW = "UNFOLLOW";*/
@@ -58,7 +59,7 @@ export const setAuthUserData = (userId: string | null, email: string | null, log
     ({type: SET_USER_DATA, payload: {userId, email, login, isAuth}})
 
 export const getAuthUserData = () => (dispatch: Dispatch) => {
-    headerAuthMeAPI.singIn()
+    return headerAuthMeAPI.singIn()
         .then(data => {
             if (data.resultCode === ResultCodesEnum.Success) {
                 let {id, email, login} = data.data;
@@ -71,8 +72,11 @@ export const login = (email:string | null, password:string, rememberMe:boolean) 
     headerAuthMeAPI.login(email, password, rememberMe)
         .then(data => {
             if (data.resultCode === ResultCodesEnum.Success) {
-
                 dispatch(getAuthUserData()) ;
+            } else {
+                let message = data.messages.length > 0 ? data.messages[0] : "Some error"
+                // @ts-ignore
+                dispatch(stopSubmit("login", {_error: message}))
             }
         });
 }

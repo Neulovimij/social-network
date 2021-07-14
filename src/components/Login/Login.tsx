@@ -1,11 +1,12 @@
 import React from "react";
-import  {InjectedFormProps, Field, reduxForm} from "redux-form";
+import {InjectedFormProps, Field, reduxForm} from "redux-form";
 import {Input} from "../Common/FormsControls/FormsControls";
 import {required} from "../../utils/validators/validators";
 import {connect} from "react-redux";
 import {login} from "../../redux/auth-reducer";
 import {Redirect} from "react-router-dom";
 import {AppStateType} from "../../redux/redux-store";
+import s from "../Common/FormsControls/FormsControls.module.css"
 
 type FormDataType = {
     email: string
@@ -17,14 +18,20 @@ const LoginForm: React.FC<InjectedFormProps<FormDataType>> = (props) => {
     return (
         <form onSubmit={props.handleSubmit}>
             <div>
-                <Field placeholder={"Email"} name={"email"} component={Input} validate = {[required]}/>
+                <Field placeholder={"Email"} name={"email"} component={Input} validate={[required]}/>
             </div>
             <div>
-                <Field placeholder={"Password"} name={"password"} component={Input} type={"password"} validate = {[required]} />
+                <Field placeholder={"Password"} name={"password"} component={Input} type={"password"}
+                       validate={[required]}/>
             </div>
             <div>
                 <Field component={Input} name={"rememberMe"} type={"checkbox"}/> remember me
             </div>
+            {props.error &&
+                <div className={s.formSummaryError}>
+                    {props.error}
+                </div>
+            }
             <div>
                 <button>Login</button>
             </div>
@@ -42,7 +49,7 @@ const Login: React.FC<LoginPropsType> = (props) => {
     }
 
     if (props.isAuth) {
-        return <Redirect to={"/profile"} />
+        return <Redirect to={"/profile"}/>
     }
     return (
         <div>
@@ -57,12 +64,12 @@ type MapStatePropsType = {
 
 }
 type MapDispatchPropsType = {
-    login: (email:string | null, password:string, rememberMe:boolean) => void
+    login: (email: string | null, password: string, rememberMe: boolean) => void
 }
 
 
-const mapStateToProps = (state: AppStateType): MapStatePropsType  => ({
+const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
     isAuth: state.auth.isAuth
 })
 
-export default connect(mapStateToProps, {login}) (Login);
+export default connect(mapStateToProps, {login})(Login);

@@ -134,6 +134,7 @@ export type ActionsType = AddPostActionType
     | SetUserDataActionType
     | ToggleFollowingProgressActionType
     | SetUserStatusActionType
+    | InitializedSuccessActionType
 
 export type AddPostActionType = {
     type: 'ADD-POST'
@@ -210,6 +211,8 @@ export type SetUserStatusActionType = {
     type: "SET-USER-STATUS"
     status: string
 }
-
+export type InitializedSuccessActionType = {
+    type: "SET-INITIALIZED"
+}
 
 export default store;
