@@ -30,21 +30,44 @@ export const usersAPI = {
 
 }
 
+export enum ResultCodesEnum {
+    Success = 0,
+    Error = 1,
+    captchaIsRequired = 10
+}
+
+type SingInType = {
+    data: {
+        id: string
+        email: string
+        login: string
+    }
+    resultCode: ResultCodesEnum
+    messages: Array<string>
+}
+
+type LoginType = {
+    data: {
+        userId: string
+    }
+    resultCode: ResultCodesEnum
+    messages: Array<string>
+}
 export const headerAuthMeAPI = {
     singIn() {
-        return istance.get(`auth/me`)
+        return istance.get<SingInType>(`auth/me`)
             .then(response => {
                 return response.data
             })
     },
-    login(email:string, password:string, rememberMe:boolean = false) {
-        return istance.post(`auth/login`, {email, password, rememberMe} )
+    login(email: string | null, password: string, rememberMe: boolean = false) {
+        return istance.post<LoginType>(`auth/login`, {email, password, rememberMe} )
             .then(response => {
                 return response.data
             })
     },
-    loginOut(email:string, password:string, rememberMe:boolean = false) {
-        return istance.post(`auth/login`, {email, password, rememberMe} )
+    logOut() {
+        return istance.delete(`auth/login` )
             .then(response => {
                 return response.data
             })

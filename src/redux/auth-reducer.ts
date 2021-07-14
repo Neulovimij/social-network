@@ -1,10 +1,8 @@
-import {
-    ActionsType, SetUserDataActionType,
-
-} from "./store";
+import {ActionsType, SetUserDataActionType,} from "./store";
 import {Dispatch} from "redux";
-import {headerAuthMeAPI} from "../api/api";
-import {setUserProfile} from "./profile-reducer";
+import {headerAuthMeAPI, ResultCodesEnum} from "../api/api";
+import {ThunkDispatch} from "redux-thunk";
+import {AppStateType} from "./redux-store";
 
 const SET_USER_DATA = "SET-USER-DATA";
 /*const UNFOLLOW = "UNFOLLOW";*/
@@ -31,7 +29,8 @@ type InitialStateType = {
     userId: string | null,
     email: string | null,
     login: string | null,
-    isAuth: boolean
+    isAuth: boolean,
+    //captchaUrl: string | null
 }
 
 let initialState: InitialStateType = {
@@ -39,7 +38,7 @@ let initialState: InitialStateType = {
     email: null,
     login: null,
     isAuth: false,
-
+    //captchaUrl: null
 };
 
 const authReduser = (state: InitialStateType = initialState, action: ActionsType): InitialStateType => {
@@ -47,8 +46,7 @@ const authReduser = (state: InitialStateType = initialState, action: ActionsType
         case SET_USER_DATA:
             return {
                 ...state,
-                ...action.data,
-                isAuth: true,
+                ...action.payload
             }
 
         default:
@@ -56,29 +54,37 @@ const authReduser = (state: InitialStateType = initialState, action: ActionsType
     }
 }
 
-export const setAuthUserData = (userId: string, email: string, login: string): SetUserDataActionType =>
-    ({type: SET_USER_DATA, data: {userId, email, login}})
+export const setAuthUserData = (userId: string | null, email: string | null, login: string | null, isAuth: boolean): SetUserDataActionType =>
+    ({type: SET_USER_DATA, payload: {userId, email, login, isAuth}})
 
 export const getAuthUserData = () => (dispatch: Dispatch) => {
     headerAuthMeAPI.singIn()
         .then(data => {
-            if (data.resultCode === 0) {
+            if (data.resultCode === ResultCodesEnum.Success) {
                 let {id, email, login} = data.data;
-                dispatch(setAuthUserData(id, email, login));
+                dispatch(setAuthUserData(id, email, login, true));
             }
         });
 }
 
-export const login = (email, password, rememberMe) => (dispatch: Dispatch) => {
-    headerAuthMeAPI.singIn()
+export const login = (email:string | null, password:string, rememberMe:boolean) => (dispatch: ThunkDispatch<AppStateType, unknown, ActionsType>) => {
+    headerAuthMeAPI.login(email, password, rememberMe)
         .then(data => {
-            if (data.resultCode === 0) {
-                let {id, email, login} = data.data;
-                dispatch(setAuthUserData(id, email, login));
+            if (data.resultCode === ResultCodesEnum.Success) {
+
+                dispatch(getAuthUserData()) ;
             }
         });
 }
 
+export const logOut = () => (dispatch: Dispatch) => {
+    headerAuthMeAPI.logOut()
+        .then(data => {
+            if (data.resultCode === ResultCodesEnum.Success) {
+                dispatch(setAuthUserData(null, null, null, false));
+            }
+        });
+}
 
 
 export default authReduser;

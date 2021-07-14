@@ -188,9 +188,17 @@ export type SetUserProfileActionType = {
     type: 'SET-USER-PROFILE'
     profile: any
 }
+
+export type SetUserDataPayloadActionType = {
+    userId: string | null,
+    email: string | null,
+    login: string | null,
+    isAuth: boolean
+}
+
 export type SetUserDataActionType = {
     type: 'SET-USER-DATA'
-    data: { userId: string, email: string, login: string }
+    payload: SetUserDataPayloadActionType
 }
 export type ToggleFollowingProgressActionType = {
     type: 'TOGGLE-IS-FOLLOWING-PROGRESS'
